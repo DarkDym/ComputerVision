@@ -4,6 +4,8 @@ import os, sys
 import math
 import numpy as np
 
+from matplotlib import pyplot as plt
+
 maior_dif=0
 i_img=-1
 imagens = []
@@ -22,10 +24,23 @@ for i in range(0,4):
 
     B, G, R = cv2.split(final)
     gray_images.append(np.full((height, width), R-B, dtype=np.uint8))
-    cv2.namedWindow('JanelaGRAY'+str(i))
-    cv2.imshow('JanelaGRAY'+str(i), gray_images[i])
+    # cv2.namedWindow('JanelaGRAY'+str(i))
+    # cv2.imshow('JanelaGRAY'+str(i), gray_images[i])
 
 cv2.waitKey()
 
 print("QUESTÃO 1 FEITA")
+cv2.waitKey()
+
+# HISTOGRAMAS
+for i in range(0,4):
+    img_hist = gray_images[i]
+    # max_value= np.average(img_hist)
+    # max_value= 2*int(max_value)
+    max_value=np.amax(img_hist)
+
+    print(max_value)
+    plt.hist(img_hist.ravel(), max_value ,[0, max_value])
+    plt.show()
+
 cv2.waitKey()
