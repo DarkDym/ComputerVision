@@ -64,6 +64,7 @@ class Questao2:
             B, G, R = cv2.split(final)
             gray_image=np.full((height, width), R-B, dtype=np.uint8)
 
+            ################################################### A
             # Estratégia proposta por nós
             initial_th=np.mean(gray_image)
             ret_first,img_first = cv2.threshold(gray_image,initial_th,255,cv2.THRESH_BINARY)
@@ -77,11 +78,19 @@ class Questao2:
             titles = ['Original Gray Image','Histogram','Global Thresholding '+str(int(second_th))]
 
             # Plot da imagem original
-            plt.subplot(1,3,1),plt.imshow(gray_image,'gray')
+            plt.subplot(1,2,1),plt.imshow(gray_image,'gray')
             plt.title(titles[0]), plt.xticks([]), plt.yticks([])
 
+            # Plot da imagem resultante do nosso método
+            plt.subplot(1,2,2),plt.imshow(img_our_method,'gray')
+            plt.title(titles[2]), plt.xticks([]), plt.yticks([])
+
+            print(img_file_out.split(".")[0])
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
+            plt.close()
+
             # Histograma com eixo y limitado para facilitar a visualização
-            plt.subplot(1,3,2),plt.hist(gray_image.ravel(),256)
+            plt.hist(gray_image.ravel(),256)
             plt.title(titles[1]), plt.xticks([]), plt.yticks([])
             ax = plt.gca()
             ax.set_ylim([0, 100])
@@ -90,14 +99,31 @@ class Questao2:
             # Segundo e limiar final em vermelho
             plt.axvline(int(second_th), color='r', linestyle='dashed', linewidth=2)
 
-            # Plot da imagem resultante do nosso método
-            plt.subplot(1,3,3),plt.imshow(img_our_method,'gray')
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"aHIST.png")
+            plt.close()
+
+            ################################################### B
+            #  Otsu's thresholding
+            ret_otsu,img_otsu = cv2.threshold(gray_image,0,255,cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+
+            # plot all the images and their histograms
+            images = [gray_image, 0, img_otsu]
+            titles = ['Original Gray Image','Histogram',"Otsu's Thresholding"]
+
+            # Plot da imagem original
+            plt.subplot(1,2,1),plt.imshow(gray_image,'gray')
+            plt.title(titles[0]), plt.xticks([]), plt.yticks([])
+
+            # Plot da imagem resultante do Otsu
+            plt.subplot(1,2,2),plt.imshow(img_our_method,'gray')
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
-            print(img_file_out.split(".")[0])
-            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
-            plt.close()
-            #plt.show()
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
+            plt.close()          
+
+            ################################################### C
+
+
 
         print("questao2 executada")
 
