@@ -86,7 +86,7 @@ class Questao2:
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
             print(img_file_out.split(".")[0])
-            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
+            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
             plt.close()
 
             # Histograma com eixo y limitado para facilitar a visualização
@@ -99,7 +99,7 @@ class Questao2:
             # Segundo e limiar final em vermelho
             plt.axvline(int(second_th), color='r', linestyle='dashed', linewidth=2)
 
-            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"aHIST.png")
+            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"aHIST.png")
             plt.close()
 
             ################################################### B
@@ -118,12 +118,34 @@ class Questao2:
             plt.subplot(1,2,2),plt.imshow(img_our_method,'gray')
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
-            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
+            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
             plt.close()          
 
             ################################################### C
 
+            connected_component_label(img_our_method)
 
+            connected_component_label(img_otsu)
+
+            # You need to choose 4 or 8 for connectivity type
+            connectivity = 4  
+            # Perform the operation
+            ##################3output_our_method = cv2.connectedComponentsWithStats(img_our_method, connectivity, cv2.CV_32S)
+            # # Get the results
+            # # The first cell is the number of labels
+            # num_labels = output[0]
+            # # The second cell is the label matrix
+            # labels = output[1]
+            # # The third cell is the stat matrix
+            # stats = output[2]
+            # # The fourth cell is the centroid matrix
+            # centroids = output[3]
+
+            # output_ostu = cv2.connectedComponentsWithStats(img_otsu, connectivity, cv2.CV_32S)
+
+            # print("\t N labels | label matrix | stat matrix | centroid matrix")
+            # print("Nosso\t "+str(output_our_method[0]))
+            # print("Ostu\t "+str(output_ostu[0]))
 
         print("questao2 executada")
 
@@ -131,6 +153,42 @@ class Questao2:
         files = glob.glob(PATH_TO_IMGS+"*.png")
         # print(files)
         return files      
+
+def connected_component_label(img):
+    # FONTE: https://github.com/yashml/OpenGenus_Articles_Code/blob/master/Connected%20Component%20Labeling/Connected%20Component%20Labeling.ipynb
+
+    # Getting the input image
+    ################img = cv2.imread(path, 0)
+    # Converting those pixels with values 1-127 to 0 and others to 1
+    #################img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]
+    # Applying cv2.connectedComponents() 
+    num_labels, labels = cv2.connectedComponents(img)
+    
+    # Map component labels to hue val, 0-179 is the hue range in OpenCV
+    label_hue = np.uint8(179*labels/np.max(labels))
+    blank_ch = 255*np.ones_like(label_hue)
+    labeled_img = cv2.merge([label_hue, blank_ch, blank_ch])
+
+    # Converting cvt to BGR
+    labeled_img = cv2.cvtColor(labeled_img, cv2.COLOR_HSV2BGR)
+
+    # set bg label to black
+    labeled_img[label_hue==0] = 0
+    
+    
+    # Showing Original Image
+    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    plt.axis("off")
+    plt.title("Orginal Image")
+    plt.show()
+    
+    #Showing Image after Component Labeling
+    plt.imshow(cv2.cvtColor(labeled_img, cv2.COLOR_BGR2RGB))
+    plt.axis('off')
+    plt.title("Image after Component Labeling")
+    plt.show()
+
+
 
 if __name__ == "__main__":
     
