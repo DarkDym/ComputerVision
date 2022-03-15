@@ -123,29 +123,11 @@ class Questao2:
 
             ################################################### C
 
+            print("\nEstatísticas nosso método")
             connected_component_label(img_our_method)
-
+            print("\nEstatísticas Otsu")
             connected_component_label(img_otsu)
-
-            # You need to choose 4 or 8 for connectivity type
-            connectivity = 4  
-            # Perform the operation
-            ##################3output_our_method = cv2.connectedComponentsWithStats(img_our_method, connectivity, cv2.CV_32S)
-            # # Get the results
-            # # The first cell is the number of labels
-            # num_labels = output[0]
-            # # The second cell is the label matrix
-            # labels = output[1]
-            # # The third cell is the stat matrix
-            # stats = output[2]
-            # # The fourth cell is the centroid matrix
-            # centroids = output[3]
-
-            # output_ostu = cv2.connectedComponentsWithStats(img_otsu, connectivity, cv2.CV_32S)
-
-            # print("\t N labels | label matrix | stat matrix | centroid matrix")
-            # print("Nosso\t "+str(output_our_method[0]))
-            # print("Ostu\t "+str(output_ostu[0]))
+            print("-------------------------------------------")
 
         print("questao2 executada")
 
@@ -176,14 +158,28 @@ def connected_component_label(img):
     labeled_img[label_hue==0] = 0
     
     
-    # Showing Original Image
-    plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
-    plt.axis("off")
-    plt.title("Orginal Image")
-    plt.show()
+    # # Showing Original Image
+    # plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
+    # plt.axis("off")
+    # plt.title("Orginal Image")
+    # plt.show()
     
     #Showing Image after Component Labeling
-    plt.imshow(cv2.cvtColor(labeled_img, cv2.COLOR_BGR2RGB))
+    final_img=cv2.cvtColor(labeled_img, cv2.COLOR_BGR2RGB)
+
+    print("Tamanho em pixels de cada célula")
+    pixels_cores_dif=np.unique(final_img.reshape(-1, final_img.shape[2]), axis=0, return_counts = True)[-1]
+    # print(np.unique(final_img, return_counts = True))
+    pixels_cores_dif= np.delete(pixels_cores_dif, 0) # tira o preto
+    print(pixels_cores_dif)
+    print("Tamanho médio de uma célula")
+    print(np.mean(pixels_cores_dif))
+    print("Desvio padrão de tamanho de uma célula")
+    print(np.std(pixels_cores_dif))
+    print("Total de labels")
+    print(num_labels-1)
+
+    plt.imshow(final_img)
     plt.axis('off')
     plt.title("Image after Component Labeling")
     plt.show()
