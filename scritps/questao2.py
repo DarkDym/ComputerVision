@@ -75,7 +75,7 @@ class Questao2:
 
             # plot all the images and their histograms
             images = [gray_image, 0, img_our_method]
-            titles = ['Original Gray Image','Histogram','Global Thresholding '+str(int(second_th))]
+            titles = ['Original Gray Image','Histogram','Automatic Thresholding '+str(int(second_th))]
 
             # Plot da imagem original
             plt.subplot(1,2,1),plt.imshow(gray_image,'gray')
@@ -86,7 +86,7 @@ class Questao2:
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
             print(img_file_out.split(".")[0])
-            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"a.png")
             plt.close()
 
             # Histograma com eixo y limitado para facilitar a visualização
@@ -99,7 +99,7 @@ class Questao2:
             # Segundo e limiar final em vermelho
             plt.axvline(int(second_th), color='r', linestyle='dashed', linewidth=2)
 
-            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"aHIST.png")
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"aHIST.png")
             plt.close()
 
             ################################################### B
@@ -118,13 +118,13 @@ class Questao2:
             plt.subplot(1,2,2),plt.imshow(img_our_method,'gray')
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
-            # plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
+            plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
             plt.close()          
 
             ################################################### C
 
-            print("\nEstatísticas nosso método")
-            connected_component_label(img_our_method)
+            # print("\nEstatísticas nosso método")
+            # connected_component_label(img_our_method)
             print("\nEstatísticas Otsu")
             connected_component_label(img_otsu)
             print("-------------------------------------------")
@@ -142,7 +142,7 @@ def connected_component_label(img):
     # Getting the input image
     ################img = cv2.imread(path, 0)
     # Converting those pixels with values 1-127 to 0 and others to 1
-    #################img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]
+    ################img = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)[1]
     # Applying cv2.connectedComponents() 
     num_labels, labels = cv2.connectedComponents(img)
     
@@ -156,7 +156,6 @@ def connected_component_label(img):
 
     # set bg label to black
     labeled_img[label_hue==0] = 0
-    
     
     # # Showing Original Image
     # plt.imshow(cv2.cvtColor(img, cv2.COLOR_BGR2RGB))
@@ -179,10 +178,10 @@ def connected_component_label(img):
     print("Total de labels")
     print(num_labels-1)
 
-    plt.imshow(final_img)
-    plt.axis('off')
-    plt.title("Image after Component Labeling")
-    plt.show()
+    # plt.imshow(final_img)
+    # plt.axis('off')
+    # plt.title("Image after Component Labeling")
+    # plt.show()
 
 
 
