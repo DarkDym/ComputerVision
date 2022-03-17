@@ -115,7 +115,7 @@ class Questao2:
             plt.title(titles[0]), plt.xticks([]), plt.yticks([])
 
             # Plot da imagem resultante do Otsu
-            plt.subplot(1,2,2),plt.imshow(img_our_method,'gray')
+            plt.subplot(1,2,2),plt.imshow(img_otsu,'gray')
             plt.title(titles[2]), plt.xticks([]), plt.yticks([])
 
             plt.savefig(PATH_TO_IMGS_Q2+img_file_out.split(".")[0]+"b.png")
