@@ -114,7 +114,17 @@ class LoadImage():
             #=======================================WATERSHED OPENCV=======================================
             #=======================================WATERSHED OPENCV=======================================
 
-
+            #=======================================QUESTÂO 4=======================================
+            #Para executar a verificação da questão 4, descomentar um por vez as linhas 134 e 135. 
+            #Para executar a verificação do min_dist mencionado no relatório, descomentar as linhas 138 a 141 uma por execução
+            canny = cv2.Canny(imgGaussian,50,50)
+            sobel_canny = cv2.add(canny,grad)
+            sobel_canny_filtered = cv2.GaussianBlur(sobel_canny, (3,3), 0)
+            grad_laplace = cv2.Laplacian(imgGaussian, cv2.CV_16S, ksize=3)
+            abs_grad = cv2.convertScaleAbs(grad_laplace)
+            sobel_laplacian = cv2.add(abs_grad,grad)
+            sobel_laplacian_filtered = cv2.GaussianBlur(sobel_laplacian, (3,3), 0)
+            #=======================================QUESTÂO 4=======================================
 
             #=======================================WATERSHED SCIKIT=======================================
             #=======================================WATERSHED SCIKIT=======================================
@@ -122,7 +132,13 @@ class LoadImage():
             otsu = cv2.erode(otsu,kernel,iterations=3)
 
             sciImg = ndi.distance_transform_edt(grad)
+            # sciImg = ndi.distance_transform_edt(sobel_canny_filtered) #Para a questão 4
+            # sciImg = ndi.distance_transform_edt(sobel_laplacian_filtered) #Para a questão 4
             localMax = peak_local_max(sciImg, indices=False, min_distance=20, labels=otsu)
+            # localMax = peak_local_max(sciImg, indices=False, min_distance=10, labels=otsu) #Para a questão 4
+            # localMax = peak_local_max(sciImg, indices=False, min_distance=30, labels=otsu) #Para a questão 4
+            # localMax = peak_local_max(sciImg, indices=False, min_distance=40, labels=otsu) #Para a questão 4
+            # localMax = peak_local_max(sciImg, indices=False, min_distance=50, labels=otsu) #Para a questão 4
             markersSci = ndi.label(localMax, structure=np.ones((3,3)))[0]
             labels = watershed(-sciImg, markersSci, mask=otsu)
             ws = len(np.unique(labels)) - 1
@@ -161,7 +177,7 @@ class LoadImage():
             #=======================================WATERSHED SCIKIT=======================================
             #=======================================WATERSHED SCIKIT=======================================
             
-            #Para a visualização de todas as imagens geradas dentro do script, deixar a variável 'SHOW_IMGS = True', caso contrário deixar ela falsa.
+            #Para a visualização de todas as imagens geradas dentro do script, deixar a variável 'SHOW_IMGS = 1', caso contrário deixar ela '0''.
             if SHOW_IMGS:
 
                 cv2.imshow("SOBEL",cv2.resize(grad,(800,600)))
