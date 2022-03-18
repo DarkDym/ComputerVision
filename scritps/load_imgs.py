@@ -277,26 +277,37 @@ class LoadImage():
                 cv2.destroyAllWindows()
 
             #UTILIZANDO CANNY
-            canny = cv2.Canny(imgGaussian,100,200)
+            canny = cv2.Canny(imgGaussian,50,50)
             if SHOW_IMGS:
                 cv2.imshow("CANNY",cv2.resize(canny,(800,600)))
-                cv2.imwrite(PATH_TO_IMGS+"canny_"+str(os.path.basename(img_file)), canny)
+                # cv2.imwrite(PATH_TO_IMGS+"canny_"+str(os.path.basename(img_file)), canny)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
             #TESTE SOMA CANNY SOBEL
             sobel_canny = cv2.add(canny,grad)
+            sobel_canny_filtered = cv2.GaussianBlur(sobel_canny, (3,3), 0)
             if SHOW_IMGS:
                 cv2.imshow("CANNY+SOBEL",cv2.resize(sobel_canny,(800,600)))
                 # cv2.imwrite(PATH_TO_IMGS+"laplacian_"+str(os.path.basename(img_file)), grad)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
+                cv2.imshow("CANNY+SOBEL FILTERED",cv2.resize(sobel_canny_filtered,(800,600)))
+                cv2.imwrite(PATH_TO_IMGS+"sobelcanny_"+str(os.path.basename(img_file)), sobel_canny_filtered)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
 
             #TESTE SOMA LAPLACIAN SOBEL
             sobel_laplacian = cv2.add(abs_grad,grad)
+            sobel_laplacian_filtered = cv2.GaussianBlur(sobel_laplacian, (3,3), 0)
             if SHOW_IMGS:
                 cv2.imshow("LAPLACIAN+SOBEL",cv2.resize(sobel_laplacian,(800,600)))
                 # cv2.imwrite(PATH_TO_IMGS+"laplacian_"+str(os.path.basename(img_file)), grad)
+                cv2.waitKey(0)
+                cv2.destroyAllWindows()
+            if SHOW_IMGS:
+                cv2.imshow("LAPLACIAN+SOBEL FILTERED",cv2.resize(sobel_laplacian_filtered,(800,600)))
+                cv2.imwrite(PATH_TO_IMGS+"sobellaplacian_"+str(os.path.basename(img_file)), sobel_laplacian_filtered)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
 
@@ -460,10 +471,10 @@ class LoadImage():
             otsu = cv2.erode(otsu,kernel,iterations=3)
             if SHOW_IMGS2:
                 cv2.imshow("OTSU",cv2.resize(otsu,(800,600)))
-                # cv2.imwrite(PATH_TO_IMGS+"laplacian_"+str(os.path.basename(img_file)), grad)
+                # cv2.imwrite(PATH_TO_IMGS+"dier_"+str(os.path.basename(img_file)), otsu)
                 cv2.waitKey(0)
                 cv2.destroyAllWindows()
-            sciImg = ndi.distance_transform_edt(grad)
+            sciImg = ndi.distance_transform_edt(sobel_laplacian_filtered)
             localMax = peak_local_max(sciImg, indices=False, min_distance=20, labels=otsu)
             markersSci = ndi.label(localMax, structure=np.ones((3,3)))[0]
             labels = watershed(-sciImg, markersSci, mask=otsu)
